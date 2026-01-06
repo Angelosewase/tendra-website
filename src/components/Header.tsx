@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="w-full  ">
+    <header className="w-full  sticky top-0 z-10 bg-gray-100">
       <div className="max-w-5xl px-2 sm:px-0 mx-auto">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

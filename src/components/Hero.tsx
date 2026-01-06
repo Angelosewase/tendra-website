@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 export default function Hero() {
   return (
-    <div className="w-full min-h-[90vh] relative flex pt-40 justify-center bg-white rounded-t-3xl">
+    <div className="w-full min-h-[90vh] relative flex pt-40 justify-center bg-white rounded-t-3xl z-20">
       {/* Hexagonal SVG Illustrations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top Left */}
@@ -93,7 +93,7 @@ export default function Hero() {
       </div>
 
       <motion.div 
-        className="text-center max-w-5xl px-6 relative z-10"
+        className="text-center max-w-5xl px-6 relative z-30"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
