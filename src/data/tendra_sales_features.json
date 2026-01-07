@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": "procurement-ai",
+      "title": "Win More Tenders with AI-Driven Procurement",
+      "subtitle": "From bid submission to execution—handled intelligently",
+      "description": "Stop losing tenders to complexity and manual errors. Our AI-powered procurement engine supports you at every stage—analyzing documents, flagging risks, eliminating inconsistencies, and guiding execution after award. You move faster, submit stronger bids, and deliver with confidence."
+    },
+    {
+      "id": "financial-control",
+      "title": "Take Full Control of Your Project Finances",
+      "subtitle": "Know where every dollar goes—before it’s gone",
+      "description": "Tender-based work lives or dies on cash flow. Track expenses, manage finances in real time, and spot financial issues before they become costly problems. Get complete visibility into budgets, payments, and profitability—without spreadsheets or guesswork."
+    },
+    {
+      "id": "performance-analytics",
+      "title": "Turn Performance Data into Competitive Advantage",
+      "subtitle": "See what works, fix what doesn’t, win the next bid",
+      "description": "Understand exactly how your projects and bids perform. Deep analytics reveal cost trends, execution efficiency, and performance gaps—so every new tender is smarter, leaner, and more competitive than the last."
+    },
+    {
+      "id": "work-management",
+      "title": "Keep Teams, Subcontractors, and Documents Aligned",
+      "subtitle": "One workspace for execution, collaboration, and delivery",
+      "description": "Manage subcontractors, assign tasks, and track progress in one unified system. Store and access all tender and project documents securely, keep everyone accountable, and ensure work moves forward without delays, miscommunication, or lost files."
+    }
+  ]
+}

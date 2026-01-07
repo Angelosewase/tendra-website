@@ -1,58 +1,50 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
+import tendraSalesFeatures from "@/data/tendra_sales_features.json";
+import Lottie from "lottie-react";
+import documentScannerAnimation from "../../public/assets/document scanner.json";
+import fileAnimation from "../../public/assets/file.json";
+import peopleAnimation from "../../public/assets/people.json";
+import growthAnimation from "../../public/assets/growth.json";
 
-const featuresData = [
-  {
-    id: 1,
-    title: "Lightning Fast Performance",
-    description:
-      "Experience blazing fast load times and seamless interactions. Our optimized architecture ensures your users never wait.",
-    media: {
-      type: "icon",
-      content: "⚡",
-    },
-  },
-  {
-    id: 2,
-    title: "Intelligent Automation",
-    description:
-      "Automate repetitive tasks and workflows with AI-powered intelligence. Save hours of manual work every week.",
-    media: {
-      type: "icon",
-      content: "🤖",
-    },
-  },
-  {
-    id: 3,
-    title: "Real-time Collaboration",
-    description:
-      "Work together seamlessly with your team. See changes instantly and collaborate without friction.",
-    media: {
-      type: "icon",
-      content: "👥",
-    },
-  },
-  {
-    id: 4,
-    title: "Advanced Analytics",
-    description:
-      "Gain deep insights into your data with powerful analytics tools. Make data-driven decisions with confidence.",
-    media: {
-      type: "icon",
-      content: "📊",
-    },
-  },
-  {
-    id: 5,
-    title: "Enterprise Security",
-    description:
-      "Bank-level encryption and security measures protect your data. Compliant with industry standards and regulations.",
-    media: {
-      type: "icon",
-      content: "🔒",
-    },
-  },
+// Keywords to highlight in titles
+const KEYWORDS_TO_HIGHLIGHT = [
+  "AI", "Procurement", "Financial", "Control", "Performance", "Analytics", 
+  "Work", "Management", "Tenders", "Teams", "Subcontractors", "Documents", "Finances"
 ];
+
+// Function to highlight keywords in text
+const highlightKeywords = (text: string) => {
+  let highlightedText = text;
+  
+  KEYWORDS_TO_HIGHLIGHT.forEach(keyword => {
+    const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
+    highlightedText = highlightedText.replace(
+      regex, 
+      `<span class="text-blue-800 font-semibold">${keyword}</span>`
+    );
+  });
+  
+  return highlightedText;
+};
+
+// Map the JSON data to include media objects for the existing UI structure
+const featuresData = tendraSalesFeatures.products.map((product, index) => ({
+  id: product.id,
+  title: product.title,
+  subtitle: product.subtitle,
+  description: product.description,
+  media: {
+    type: "lottie",
+    content:
+      [
+        documentScannerAnimation,
+        fileAnimation,
+        growthAnimation,
+        peopleAnimation,
+      ][index] || documentScannerAnimation,
+  },
+}));
 
 export default function ScrollingFeatures() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -104,10 +96,14 @@ export default function ScrollingFeatures() {
               }`}
             >
               <div className="max-w-2xl">
-                <h2 className="text-5xl font-semibold mb-6 leading-tight">
-                  {feature.title}
-                </h2>
-                <p className="text-xl text-gray-400 leading-relaxed">
+                <h2 
+                  className="text-3xl font-semibold mb-4 leading-tight"
+                  dangerouslySetInnerHTML={{ __html: highlightKeywords(feature.title) }}
+                />
+                <p className="text-xl text-gray-700 mb-6 leading-relaxed font-medium">
+                  {feature.subtitle}
+                </p>
+                <p className="text-lg text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -118,7 +114,7 @@ export default function ScrollingFeatures() {
         {/* Static Media Column - Takes less width */}
         <div className="w-[40%] relative">
           <div className="sticky top-0 h-screen flex items-center justify-center py-20">
-            <Card className="w-full h-full border-0 border-l-2 border-black rounded-none shadow-none flex items-center justify-center relative overflow-hidden bg-transparent">
+            <Card className="w-full h-full border-0 rounded-none shadow-none flex items-center justify-center relative overflow-hidden bg-transparent">
               {featuresData.map((feature, index) => (
                 <div
                   key={feature.id}
@@ -126,12 +122,22 @@ export default function ScrollingFeatures() {
                     activeIndex === index ? "opacity-100" : "opacity-0"
                   }`}
                 >
-                  {feature.media.type === "icon" && (
+                  {/* {feature.media.type === "icon" && (
                     <div className="text-9xl transform transition-transform duration-500 hover:scale-110">
                       {feature.media.content}
                     </div>
+                  )} */}
+                  {feature.media.type === "lottie" && (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Lottie
+                        animationData={feature.media.content}
+                        className="w-full h-full max-w-sm max-h-sm"
+                        loop={true}
+                        autoplay={true}
+                      />
+                    </div>
                   )}
-                  {feature.media.type === "image" && (
+                  {/* {feature.media.type === "image" && (
                     <img
                       src={feature.media.content}
                       alt={feature.title}
@@ -147,7 +153,7 @@ export default function ScrollingFeatures() {
                       playsInline
                       className="max-w-full max-h-full object-contain"
                     />
-                  )}
+                  )} */}
                 </div>
               ))}
             </Card>
