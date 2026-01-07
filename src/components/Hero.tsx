@@ -1,17 +1,49 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 
 export default function Hero() {
+  const { scrollYProgress } = useScroll();
+
+  // Transform values for each icon based on scroll
+  const topLeftX = useTransform(scrollYProgress, [0, 0.3], [0, -200]);
+  const topLeftY = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
+  const topLeftOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+  const topRightX = useTransform(scrollYProgress, [0, 0.3], [0, 200]);
+  const topRightY = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
+  const topRightOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+  const middleLeftX = useTransform(scrollYProgress, [0, 0.3], [0, -150]);
+  const middleLeftY = useTransform(scrollYProgress, [0, 0.3], [0, 50]);
+  const middleLeftOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+  const middleRightX = useTransform(scrollYProgress, [0, 0.3], [0, 150]);
+  const middleRightY = useTransform(scrollYProgress, [0, 0.3], [0, 50]);
+  const middleRightOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+  const bottomLeftX = useTransform(scrollYProgress, [0, 0.3], [0, -250]);
+  const bottomLeftY = useTransform(scrollYProgress, [0, 0.3], [0, 150]);
+  const bottomLeftOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
+  const bottomRightX = useTransform(scrollYProgress, [0, 0.3], [0, 250]);
+  const bottomRightY = useTransform(scrollYProgress, [0, 0.3], [0, 150]);
+  const bottomRightOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+
   return (
     <div className="w-full min-h-[90vh] relative flex pt-40 justify-center bg-white rounded-t-3xl z-20">
       {/* Hexagonal SVG Illustrations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top Left */}
         <motion.div 
-          className="absolute top-5 left-5 md:top-4 md:left-32 w-48 h-48 md:w-64 md:h-64 opacity-100 hidden md:hidden lg:block"
+          className="absolute top-5 left-5 md:top-4 md:left-32 w-48 h-48 md:w-64 md:h-64 hidden md:hidden lg:block"
           initial={{ x: -200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          style={{
+            x: topLeftX,
+            y: topLeftY,
+            opacity: topLeftOpacity
+          }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
           <img
@@ -23,9 +55,14 @@ export default function Hero() {
 
         {/* Top Right */}
         <motion.div 
-          className="absolute top-5 right-5 md:top-10 md:right-15 w-48 h-48 md:w-64 md:h-64 opacity-100 hidden md:hidden lg:block"
+          className="absolute top-5 right-5 md:top-10 md:right-15 w-48 h-48 md:w-64 md:h-64 hidden md:hidden lg:block"
           initial={{ x: 200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          style={{
+            x: topRightX,
+            y: topRightY,
+            opacity: topRightOpacity
+          }}
           transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
         >
           <img
@@ -37,9 +74,14 @@ export default function Hero() {
 
         {/* Middle Left */}
         <motion.div 
-          className="absolute top-1/2 left-0 md:left-5 transform -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 opacity-100 hidden md:block"
+          className="absolute top-1/2 left-0 md:left-5 transform -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 hidden md:block"
           initial={{ x: -150, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          style={{
+            x: middleLeftX,
+            y: middleLeftY,
+            opacity: middleLeftOpacity
+          }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
         >
           <img
@@ -51,9 +93,14 @@ export default function Hero() {
 
         {/* Middle Right */}
         <motion.div 
-          className="absolute top-1/2 right-0 md:right-5 transform -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 opacity-100 hidden md:block"
+          className="absolute top-1/2 right-0 md:right-5 transform -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 hidden md:block"
           initial={{ x: 150, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          style={{
+            x: middleRightX,
+            y: middleRightY,
+            opacity: middleRightOpacity
+          }}
           transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
         >
           <img
@@ -65,9 +112,14 @@ export default function Hero() {
 
         {/* Bottom Left */}
         <motion.div 
-          className="absolute bottom-10 left-10 md:bottom-5 md:left-44 w-48 h-48 md:w-64 md:h-64 opacity-100"
+          className="absolute bottom-10 left-10 md:bottom-5 md:left-44 w-48 h-48 md:w-64 md:h-64"
           initial={{ x: -200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          style={{
+            x: bottomLeftX,
+            y: bottomLeftY,
+            opacity: bottomLeftOpacity
+          }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
         >
           <img
@@ -79,9 +131,14 @@ export default function Hero() {
 
         {/* Bottom Right */}
         <motion.div 
-          className="absolute bottom-10 right-10 md:bottom-10 md:right-44 w-48 h-48 md:w-64 md:h-64 opacity-100"
+          className="absolute bottom-10 right-10 md:bottom-10 md:right-44 w-48 h-48 md:w-64 md:h-64"
           initial={{ x: 200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          style={{
+            x: bottomRightX,
+            y: bottomRightY,
+            opacity: bottomRightOpacity
+          }}
           transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
         >
           <img
