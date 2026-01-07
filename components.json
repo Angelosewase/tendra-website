@@ -19,6 +19,7 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@tendra": "https://tendra.com/r/{name}.json"
+    "@tendra": "https://tendra.com/r/{name}.json",
+    "@tailark": "https://tailark.com/r/{name}.json"
   }
 }
