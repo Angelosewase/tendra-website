@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Logo } from "./logo";
 
 export default function Header() {
   return (
@@ -7,8 +8,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            {/* <div className="w-8 h-8 bg-blue-600 rounded-lg mr-3"></div> */}
-            <span className="text-xl font-bold text-gray-900">Tendra</span>
+            <Logo className="mr-3" />
           </div>
 
           {/* Navigation */}
