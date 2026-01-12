@@ -74,7 +74,7 @@ export default function Hero() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top Left */}
         <motion.div 
-          className="absolute top-5 left-5 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-64 xl:h-64 lg:left-32"
+          className="absolute top-5 left-3 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-40 lg:h-40 xl:w-64 xl:h-64 lg:left-20"
           initial={{ x: -200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           style={{
@@ -93,7 +93,7 @@ export default function Hero() {
 
         {/* Top Right */}
         <motion.div 
-          className="absolute top-5 right-5 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-64 xl:h-64 lg:right-32"
+          className="absolute top-5 right-5 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-64 xl:h-64 lg:right-20"
           initial={{ x: 200, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           style={{
