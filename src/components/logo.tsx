@@ -5,7 +5,7 @@ export const Logo = ({ className, uniColor }: { className?: string; uniColor?: b
     return (
         <img
             src={logoSvg}
-            alt="Tendra Logo"
+            alt="tero Logo"
             className={cn('h-24 w-auto', className)}
         />
     )

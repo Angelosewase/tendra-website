@@ -1,9 +1,47 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "motion/react";
+import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Hero() {
   const { scrollYProgress } = useScroll();
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const addToWaitlist = useMutation(api.waitlist.addToWaitlist);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await addToWaitlist({ email });
+      toast.success("Successfully joined , talk soon !");
+      setEmail("");
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("already registered")) {
+        toast.error("This email already joined ");
+      } else {
+        toast.error("Failed to join. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Transform values for each icon based on scroll
   const topLeftX = useTransform(scrollYProgress, [0, 0.3], [0, -200]);
@@ -31,7 +69,7 @@ export default function Hero() {
   const bottomRightOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <div className="w-full min-h-[90vh] relative flex pt-40 justify-center bg-white rounded-t-3xl z-20">
+    <div id="hero" className="w-full min-h-[90vh] relative flex pt-40 justify-center bg-white rounded-t-3xl z-20">
       {/* Hexagonal SVG Illustrations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top Left */}
@@ -182,25 +220,31 @@ export default function Hero() {
           Complete projects in record time. Automate tasks, collaborate
           seamlessly, deliver results faster.
         </motion.p>
-        <motion.div 
-          className="flex flex-col sm:flex-row border-2 rounded-lg border-black justify-center items-center max-w-lg mx-auto p-0"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-        >
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            className="w-full sm:flex-1 px-6 py-6 text-lg border-0 rounded-r-none focus-visible:ring-0"
-            onFocus={(e) => e.preventDefault()}
-          />
-          <Button
-            size="lg"
-            className="w-full sm:w-auto px-8 py-6 bg-black text-white font-semibold text-lg rounded-l-lg rounded-r-lg sm:rounded-l-none hover:bg-gray-800"
+        <form onSubmit={handleSubmit}>
+          <motion.div 
+            className="flex flex-col sm:flex-row border-2 rounded-lg border-black justify-center items-center max-w-lg mx-auto p-0"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
           >
-            Get Early Access
-          </Button>
-        </motion.div>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full sm:flex-1 px-6 py-6 text-lg border-0 rounded-r-none focus-visible:ring-0"
+              disabled={isLoading}
+            />
+            <Button
+              type="submit"
+              size="lg"
+              disabled={isLoading}
+              className="w-full sm:w-auto px-8 py-6 bg-black text-white font-semibold text-lg rounded-l-lg rounded-r-lg sm:rounded-l-none hover:bg-gray-800 disabled:opacity-50"
+            >
+              {isLoading ? "Joining..." : "Get Early Access"}
+            </Button>
+          </motion.div>
+        </form>
       </motion.div>
     </div>
   );

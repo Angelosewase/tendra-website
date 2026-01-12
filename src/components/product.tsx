@@ -6,7 +6,7 @@ import aiAutoAnimation from "../../public/assets/ai-auto (1).json";
 
 export default function Product() {
   return (
-    <div className="flex flex-col min-h-screen max-w-5xl px-2 sm:px-0 mx-auto pt-24 pb-12">
+    <div id="product" className="flex flex-col min-h-screen max-w-5xl px-2 sm:px-0 mx-auto pt-24 pb-12">
       <h1 className="text-xl md:text-4xl font-bold text-gray-900 leading-tight mb-6">
         Everything work needs, in one place !
       </h1>

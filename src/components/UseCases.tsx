@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-import tendraSalesFeatures from "@/data/tendra_sales_features.json";
+import teroSalesFeatures from "@/data/tendra_sales_features.json";
 import Lottie from "lottie-react";
 import documentScannerAnimation from "../../public/assets/document scanner.json";
 import fileAnimation from "../../public/assets/file.json";
@@ -29,7 +29,7 @@ const highlightKeywords = (text: string) => {
 };
 
 // Map the JSON data to include media objects for the existing UI structure
-const featuresData = tendraSalesFeatures.products.map((product, index) => ({
+const featuresData = teroSalesFeatures.products.map((product, index) => ({
   id: product.id,
   title: product.title,
   subtitle: product.subtitle,
@@ -81,7 +81,7 @@ export default function ScrollingFeatures() {
   }, []);
 
   return (
-    <div ref={sectionRef} className="relative">
+    <div ref={sectionRef} id="use-cases" className="relative">
       <div className="flex max-w-5xl mx-auto">
         {/* Scrolling Content Column - Takes more width */}
         <div className="w-[60%] pr-12">
