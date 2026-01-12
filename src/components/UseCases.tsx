@@ -48,8 +48,20 @@ const featuresData = teroSalesFeatures.products.map((product, index) => ({
 
 export default function ScrollingFeatures() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,28 +94,28 @@ export default function ScrollingFeatures() {
 
   return (
     <div ref={sectionRef} id="use-cases" className="relative">
-      <div className="flex max-w-5xl mx-auto">
-        {/* Scrolling Content Column - Takes more width */}
-        <div className="w-[60%] pr-12">
+      <div className="flex flex-col md:flex-row max-w-5xl mx-auto">
+        {/* Scrolling Content Column - Full width on mobile, 60% on desktop */}
+        <div className="w-full md:w-[60%] md:pr-12">
           {featuresData.map((feature, index) => (
             <div
               key={feature.id}
               ref={(el) => {
                 itemRefs.current[index] = el;
               }}
-              className={`min-h-screen flex flex-col justify-center py-20 transition-opacity duration-300 ${
+              className={`min-h-screen flex flex-col justify-center py-12 md:py-20 transition-opacity duration-300 ${
                 activeIndex === index ? "opacity-100" : "opacity-30"
               }`}
             >
-              <div className="max-w-2xl">
+              <div className="max-w-2xl px-4 md:px-0">
                 <h2 
-                  className="text-3xl font-semibold mb-4 leading-tight"
+                  className="text-2xl md:text-3xl font-semibold mb-3 md:mb-4 leading-tight"
                   dangerouslySetInnerHTML={{ __html: highlightKeywords(feature.title) }}
                 />
-                <p className="text-xl text-gray-700 mb-6 leading-relaxed font-medium">
+                <p className="text-lg md:text-xl text-gray-700 mb-4 md:mb-6 leading-relaxed font-medium">
                   {feature.subtitle}
                 </p>
-                <p className="text-lg text-gray-600 leading-relaxed">
+                <p className="text-base md:text-lg text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -111,9 +123,9 @@ export default function ScrollingFeatures() {
           ))}
         </div>
 
-        {/* Static Media Column - Takes less width */}
-        <div className="w-[40%] relative">
-          <div className="sticky top-0 h-screen flex items-center justify-center py-20">
+        {/* Static Media Column - Full width on mobile, 40% on desktop */}
+        <div className="w-full md:w-[40%] relative">
+          <div className={`sticky top-0 ${isMobile ? 'h-96' : 'h-screen'} flex items-center justify-center py-12 md:py-20`}>
             <Card className="w-full h-full border-0 rounded-none shadow-none flex items-center justify-center relative overflow-hidden bg-transparent">
               {featuresData.map((feature, index) => (
                 <div
@@ -131,7 +143,7 @@ export default function ScrollingFeatures() {
                     <div className="w-full h-full flex items-center justify-center">
                       <Lottie
                         animationData={feature.media.content}
-                        className="w-full h-full max-w-sm max-h-sm"
+                        className="w-full h-full max-w-xs md:max-w-sm max-h-xs md:max-h-sm"
                         loop={true}
                         autoplay={true}
                       />
