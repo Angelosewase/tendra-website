@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useState } from "react";
+import { motion, useScroll, useTransform, useInView } from "motion/react";
+import { useState, useRef, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "react-toastify";
@@ -12,6 +12,34 @@ export default function Hero() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const addToWaitlist = useMutation(api.waitlist.addToWaitlist);
+  
+  // Refs for in-view detection
+  const imagesRef = useRef(null);
+  const isInView = useInView(imagesRef, { once: false, amount: 0.3 });
+  
+  // State for mobile image cycling
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Image data
+  const images = [
+    { src: "/assets/automation.svg", alt: "Automation" },
+    { src: "/assets/graph.svg", alt: "Graph" },
+    { src: "/assets/folder.svg", alt: "Folder" },
+    { src: "/assets/storage.svg", alt: "Storage" },
+    { src: "/assets/time.svg", alt: "Time" },
+    { src: "/assets/Task List.svg", alt: "Task List" }
+  ];
+  
+  // Cycle through images on mobile
+  useEffect(() => {
+    if (isInView) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+      }, 3000); // Change image every 3 seconds
+      
+      return () => clearInterval(interval);
+    }
+  }, [isInView, images.length]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,132 +97,185 @@ export default function Hero() {
   const bottomRightOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <div id="hero" className="w-full min-h-[90vh] relative flex pt-20 md:pt-32 lg:pt-40 justify-center bg-white rounded-t-3xl z-20 px-4 items-center sm:items-start">
-      {/* Hexagonal SVG Illustrations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top Left */}
-        <motion.div 
-          className="absolute top-5 left-3 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-40 lg:h-40 xl:w-64 xl:h-64 lg:left-20"
-          initial={{ x: -200, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          style={{
-            x: topLeftX,
-            y: topLeftY,
-            opacity: topLeftOpacity
-          }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        >
-          <img
-            src="/assets/automation.svg"
-            alt="Automation"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+    <div id="hero" className="w-full min-h-[90vh] relative flex pt-10 md:pt-16 lg:pt-20 justify-center bg-white rounded-t-3xl z-20 px-4 items-start">
+      {/* Horizontal Images at Bottom */}
+      <div ref={imagesRef} className="absolute bottom-8 left-0 right-0 flex justify-center items-center px-4 pointer-events-none">
+        {/* Desktop: Show all images */}
+        <div className="hidden md:flex">
+          {/* Automation */}
+          <motion.div 
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-56 relative z-10 pointer-events-auto cursor-pointer"
+            initial={{ y: 50, opacity: 0 }}
+            animate={isInView ? { 
+              y: [0, -15, 0],
+              opacity: 1
+            } : {}}
+            style={{
+              opacity: isInView ? 1 : bottomLeftOpacity
+            }}
+            transition={{ 
+              y: { duration: 2, repeat: isInView ? Infinity : 0, repeatDelay: 1, ease: "easeInOut" },
+              opacity: { duration: 0.8, delay: 0.6, ease: "easeOut" }
+            }}
+          >
+            <img
+              src="/assets/automation.svg"
+              alt="Automation"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
 
-        {/* Top Right */}
-        <motion.div 
-          className="absolute top-5 right-5 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-64 xl:h-64 lg:right-20"
-          initial={{ x: 200, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          style={{
-            x: topRightX,
-            y: topRightY,
-            opacity: topRightOpacity
-          }}
-          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-        >
-          <img
-            src="/assets/graph.svg"
-            alt="Graph"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+          {/* Graph */}
+          <motion.div 
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 relative z-20 pointer-events-auto cursor-pointer"
+            initial={{ y: 50, opacity: 0 }}
+            animate={isInView ? { 
+              y: [0, -15, 0],
+              opacity: 1
+            } : {}}
+            style={{
+              opacity: isInView ? 1 : topRightOpacity
+            }}
+            transition={{ 
+              y: { duration: 2.5, repeat: isInView ? Infinity : 0, repeatDelay: 1.2, ease: "easeInOut" },
+              opacity: { duration: 0.8, delay: 0.3, ease: "easeOut" }
+            }}
+          >
+            <img
+              src="/assets/graph.svg"
+              alt="Graph"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
 
-        {/* Middle Left */}
-        <motion.div 
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48 md:left-5 hidden sm:block"
-          initial={{ x: -150, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          style={{
-            x: middleLeftX,
-            y: middleLeftY,
-            opacity: middleLeftOpacity
-          }}
-          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-        >
-          <img
-            src="/assets/folder.svg"
-            alt="Folder"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+          {/* Folder */}
+          <motion.div 
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 relative z-30 pointer-events-auto cursor-pointer"
+            initial={{ y: 50, opacity: 0 }}
+            animate={isInView ? { 
+              y: [0, -15, 0],
+              opacity: 1
+            } : {}}
+            style={{
+              opacity: isInView ? 1 : middleLeftOpacity
+            }}
+            transition={{ 
+              y: { duration: 2.2, repeat: isInView ? Infinity : 0, repeatDelay: 0.8, ease: "easeInOut" },
+              opacity: { duration: 0.8, delay: 0.4, ease: "easeOut" }
+            }}
+          >
+            <img
+              src="/assets/folder.svg"
+              alt="Folder"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
 
-        {/* Middle Right */}
-        <motion.div 
-          className="absolute top-1/2 right-0 transform -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48 md:right-5 hidden sm:block"
-          initial={{ x: 150, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          style={{
-            x: middleRightX,
-            y: middleRightY,
-            opacity: middleRightOpacity
-          }}
-          transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-        >
-          <img
-            src="/assets/storage.svg"
-            alt="Storage"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+          {/* Storage */}
+          <motion.div 
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 relative z-40 pointer-events-auto cursor-pointer"
+            initial={{ y: 50, opacity: 0 }}
+            animate={isInView ? { 
+              y: [0, -15, 0],
+              opacity: 1
+            } : {}}
+            style={{
+              opacity: isInView ? 1 : middleRightOpacity
+            }}
+            transition={{ 
+              y: { duration: 2.8, repeat: isInView ? Infinity : 0, repeatDelay: 1.5, ease: "easeInOut" },
+              opacity: { duration: 0.8, delay: 0.5, ease: "easeOut" }
+            }}
+          >
+            <img
+              src="/assets/storage.svg"
+              alt="Storage"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
 
-        {/* Bottom Left */}
-        <motion.div 
-          className="absolute bottom-10 left-10 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-64 xl:h-64 lg:left-44"
-          initial={{ x: -200, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          style={{
-            x: bottomLeftX,
-            y: bottomLeftY,
-            opacity: bottomLeftOpacity
-          }}
-          transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-        >
-          <img
-            src="/assets/time.svg"
-            alt="Time"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+          {/* Time */}
+          <motion.div 
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 relative z-50 pointer-events-auto cursor-pointer"
+            initial={{ y: 50, opacity: 0 }}
+            animate={isInView ? { 
+              y: [0, -15, 0],
+              opacity: 1
+            } : {}}
+            style={{
+              opacity: isInView ? 1 : bottomLeftOpacity
+            }}
+            transition={{ 
+              y: { duration: 2.3, repeat: isInView ? Infinity : 0, repeatDelay: 1.1, ease: "easeInOut" },
+              opacity: { duration: 0.8, delay: 0.6, ease: "easeOut" }
+            }}
+          >
+            <img
+              src="/assets/time.svg"
+              alt="Time"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
 
-        {/* Bottom Right */}
-        <motion.div 
-          className="absolute bottom-10 right-10 w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-64 xl:h-64 lg:right-44"
-          initial={{ x: 200, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          style={{
-            x: bottomRightX,
-            y: bottomRightY,
-            opacity: bottomRightOpacity
-          }}
-          transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-        >
-          <img
-            src="/assets/Task List.svg"
-            alt="Task List"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+          {/* Task List */}
+          <motion.div 
+            className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-48 lg:h-48 relative z-60 pointer-events-auto cursor-pointer"
+            initial={{ y: 50, opacity: 0 }}
+            animate={isInView ? { 
+              y: [0, -15, 0],
+              opacity: 1
+            } : {}}
+            style={{
+              opacity: isInView ? 1 : bottomRightOpacity
+            }}
+            transition={{ 
+              y: { duration: 2.6, repeat: isInView ? Infinity : 0, repeatDelay: 1.3, ease: "easeInOut" },
+              opacity: { duration: 0.8, delay: 0.7, ease: "easeOut" }
+            }}
+          >
+            <img
+              src="/assets/Task List.svg"
+              alt="Task List"
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
+        </div>
+
+        {/* Mobile: Show single cycling image */}
+        <div className="md:hidden">
+          <motion.div 
+            className="w-40 h-40 sm:w-48 sm:h-48 lg:w-48 lg:h-48 relative z-10 pointer-events-auto cursor-pointer"
+            key={currentImageIndex}
+            initial={{ y: 50, opacity: 0, scale: 0.8 }}
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: 1,
+              scale: 1
+            }}
+            exit={{ y: -50, opacity: 0, scale: 0.8 }}
+            transition={{ 
+              y: { duration: 2, repeat: isInView ? Infinity : 0, repeatDelay: 1, ease: "easeInOut" },
+              opacity: { duration: 0.5, ease: "easeOut" },
+              scale: { duration: 0.5, ease: "easeOut" }
+            }}
+          >
+            <img
+              src={images[currentImageIndex].src}
+              alt={images[currentImageIndex].alt}
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
+        </div>
       </div>
 
       <motion.div 
-        className="text-center max-w-4xl lg:max-w-5xl px-4 sm:px-6 relative z-30"
+        className="text-center max-w-4xl lg:max-w-5xl px-4 sm:px-6 relative z-30 mt-16"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
       >
         <motion.h1 
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -204,7 +285,7 @@ export default function Hero() {
           <span className="text-blue-900"> Results.</span>
         </motion.h1>
         <motion.h2 
-          className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-gray-700 mb-4 sm:mb-6 leading-relaxed"
+          className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold text-gray-700 mb-3 sm:mb-4 leading-relaxed"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
@@ -212,7 +293,7 @@ export default function Hero() {
           Work Faster, Easier, More Efficient
         </motion.h2>
         <motion.p 
-          className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 sm:mb-8 lg:mb-10 max-w-md sm:max-w-lg mx-auto leading-relaxed"
+          className="text-xs sm:text-sm md:text-base text-gray-600 mb-4 sm:mb-6 max-w-md sm:max-w-lg mx-auto leading-relaxed"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
